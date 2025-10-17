@@ -11,7 +11,9 @@ import fileUpload from "express-fileupload";
 
 const app = express();
 
-app.use(cors({ origin: [process.env.FRONTEND_URL_SECOND, process.env.FRONTEND_URL_FIRST], credentials: true }));
+app.use(cors({ origin: [process.env.FRONTEND_URL_SECOND, process.env.FRONTEND_URL_FIRST],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+   credentials: true }));
 app.use(cookieParser());
 
 // ✅ move fileUpload ABOVE express.json()
