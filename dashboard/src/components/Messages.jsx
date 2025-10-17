@@ -11,7 +11,7 @@ const Messages = () => {
     const fetchMessages = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/message/getall",
+          "https://hospital-app-nyy9.vercel.app/api/v1/message/getall",
           { withCredentials: true }
         );
         setMessages(data.messages);

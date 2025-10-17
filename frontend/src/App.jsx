@@ -20,7 +20,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/user/patient/me",
+          "https://hospital-app-nyy9.vercel.app/api/v1/user/patient/me",
           {
             withCredentials: true,
           }
