@@ -11,28 +11,29 @@ import fileUpload from "express-fileupload";
 
 const app = express();
 
-app.use(cors({ origin: [process.env.FRONTEND_URL_SECOND, process.env.FRONTEND_URL_FIRST],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-   credentials: true }));
+console.log("Allowed origins:", process.env.FRONTEND_URL_FIRST, process.env.FRONTEND_URL_SECOND);
+
+app.use(cors({
+  origin: [process.env.FRONTEND_URL_SECOND, process.env.FRONTEND_URL_FIRST],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
+
+app.options("*", cors({
+  origin: [process.env.FRONTEND_URL_FIRST, process.env.FRONTEND_URL_SECOND],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
+
 app.use(cookieParser());
-
-// ✅ move fileUpload ABOVE express.json()
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
-
-app.use(express.json()); // now it's safe
+app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
+app.use(express.json());
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-const PORT = process.env.PORT || 5004;
 
 mongoose.connect(process.env.DATABASE_URI);
 mongoose.connection.on("connected", () => console.log("mongodb is connected"));
@@ -46,6 +47,5 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/message", messageRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 
-app.listen(PORT, () => {
-  console.log(`PORT is running ${PORT}`);
-});
+const PORT = process.env.PORT || 5004;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
